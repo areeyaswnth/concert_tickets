@@ -4,12 +4,14 @@ import { useEffect, useState } from "react";
 import styles from "../app/admin/admin.module.css";
 import { useAuth } from "@/context/AuthContext";
 
-interface Reservation {
+interface Transaction {
   _id: string;
-  userId: { name: string };
-  concertId: { name: string };
-  status: string;
-  reservedAt: string;
+  reservationId: string;
+  username: string;
+  concertName: string;
+  action: "CONFIRMED" | "CANCELLED";
+  createdAt: string;
+  updatedAt: string;
 }
 
 interface Meta {
@@ -21,39 +23,55 @@ interface Meta {
 
 export default function AdminHistory() {
   const { token } = useAuth();
-  const [reservations, setReservations] = useState<Reservation[]>([]);
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
-  const [limit] = useState(5); // จำนวนรายการต่อหน้า
+  const [limit] = useState(5);
   const [meta, setMeta] = useState<Meta | null>(null);
 
-  const fetchReservations = async (page: number) => {
+  const fetchTransactions = async (page: number) => {
     setLoading(true);
     try {
       const res = await fetch(
-        `http://localhost:3000/api/v1/reserve?page=${page}&limit=${limit}`,
+        `http://localhost:3000/api/v1/reserve/transactions?admin=true`,
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         }
       );
-      if (!res.ok) throw new Error("Failed to fetch reservations");
-      const json = await res.json();
-      setReservations(json.data);
-      setMeta(json.meta);
+      if (!res.ok) throw new Error("Failed to fetch transactions");
+      const json: Transaction[] = await res.json();
+
+      setTransactions(json);
+
+      // สร้าง meta เอง
+      const total = json.length;
+      const totalPages = Math.ceil(total / limit);
+      setMeta({
+        total,
+        page,
+        limit,
+        totalPages,
+      });
     } catch (err) {
       console.error(err);
+      setTransactions([]);
+      setMeta(null);
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchReservations(page);
+    if (token) fetchTransactions(page);
   }, [token, page]);
 
   if (loading) return <p>Loading...</p>;
+  if (!transactions.length) return <p>No transactions found</p>;
+
+  // คำนวณ item ของหน้าปัจจุบัน
+  const start = (page - 1) * limit;
+  const end = start + limit;
+  const currentItems = transactions.slice(start, end);
 
   return (
     <div className={styles.historyPage}>
@@ -67,18 +85,18 @@ export default function AdminHistory() {
           </tr>
         </thead>
         <tbody>
-          {reservations.map((r) => (
-            <tr key={r._id}>
-              <td>{new Date(r.reservedAt).toLocaleString()}</td>
-              <td>{r.userId?.name || "N/A"}</td>
-              <td>{r.concertId?.name || "N/A"}</td>
-              <td>{r.status === "CANCELLED" ? "Cancel" : "Reserve"}</td>
+          {currentItems.map((t) => (
+            <tr key={t._id}>
+              <td>{new Date(t.createdAt).toLocaleString()}</td>
+              <td>{t.username}</td>
+              <td>{t.concertName}</td>
+              <td>{t.action === "CANCELLED" ? "Cancel" : "Reserve"}</td>
             </tr>
           ))}
         </tbody>
       </table>
 
-      {meta && (
+      {meta && meta.totalPages > 1 && (
         <div className={styles.pagination}>
           <button
             disabled={page <= 1}
