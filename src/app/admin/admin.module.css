@@ -1,0 +1,811 @@
+.container {
+  display: flex;
+  min-height: 100vh;
+  font-family: sans-serif;
+}
+
+/* Sidebar */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 240px;      /* กำหนดความกว้างของ sidebar */
+  height: 100vh;     /* เต็มสูง */
+  background: #FFFFFF;
+  border: 1px #E7E7E7;
+  color: #000000;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.sidebar-text{
+  color: #000000;
+  font-weight: 400;
+  
+}
+.logo {
+  font-size: 40px;
+  font-weight: 600;
+  margin-bottom: 30px;
+}
+.nav {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+.nav a {
+  color: #000000;
+  font-weight: 400;
+  font-style: normal;
+  text-decoration: none;
+  font-size: 24px;
+  line-height: 36px;
+}
+.nav a:hover,
+.nav .active {
+  color: #000000;
+  font-weight: 400;
+}
+.logout {
+  display: flex;
+  align-items: center; /* จัดแนวกลางแนวตั้ง */
+  gap: 8px; /* ระยะห่างระหว่างไอคอนกับข้อความ */
+  padding: 8px 12px;
+  background: none;
+  border: none;
+  color: #000000;
+  cursor: pointer;
+  text-align: left;
+  margin-top: 20px;
+}
+.logout:hover {
+  color: rgb(0, 0, 0);
+  background-color: #E7E7E7;;
+}
+
+
+/* Main content */
+.main {
+  flex: 1;
+  padding: 30px;
+  background: #FBFBFB;
+  margin-left: 240px;   /* ให้เว้นด้านซ้าย เท่ากับ sidebar */
+  padding: 2rem;
+  overflow-y: auto;
+}
+.header {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+/* Cards */
+.cards {
+  display: flex;
+  flex-wrap: wrap;      /* ถ้าไม่พอ width ขึ้นบรรทัดใหม่ */
+  gap: 1rem;
+  justify-content: center;
+}
+
+.dashboardCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  flex: 1 1 250px;       /* ขยายได้, shrink ได้, base 250px */
+  max-width: 350px;         /* card ไม่เกิน 30% ของ container */
+  min-width: 200px;  
+  max-height: 234px;     /* card เล็กสุดไม่ต่ำกว่า 200px */
+  aspect-ratio: 1 / 1;    /* ความสูงปรับตามความกว้างอัตโนมัติ */
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  gap: 0.5rem;
+  text-align: center;
+  font-size: clamp(16px, 2vw, 24px); /* ตัวอักษรปรับตามหน้าจอ */
+}
+
+.dashboardCard h2 {
+  font-size: clamp(32px, 5vw, 60px);
+  margin: 0;
+  line-height: 1.1;
+}
+
+
+.dashboardCardBlue {
+  background-color: #0070A4; /* ตัวอย่างสีฟ้า */
+  color: white;
+}
+.dashboardCardGreen {
+  background-color: #00A58B; /* ตัวอย่างสีเขียว */
+  color: white;
+}
+.dashboardCardRed {
+  background-color: #E84E4E; /* ตัวอย่างสีแดง */
+  color: white;
+}
+
+.blue {
+  background: #3498db;
+}
+.green {
+  background: #1abc9c;
+}
+.red {
+  background: #e74c3c;
+}
+.card p {
+  margin: 0;
+}
+.card h2 {
+  margin: 5px 0 0;
+  font-size: 28px;
+}
+
+/* Tabs */
+.tabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+.tabs button {
+  padding: 8px 16px;
+  border: none;
+  background: #ddd;
+  cursor: pointer;
+  border-radius: 4px;
+}
+.tabs button:hover {
+  background: #ccc;
+}
+.activeTab {
+  background: #3498db;
+  color: white;
+}
+
+/* Concert cards */
+.concerts {
+
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+.concertCard {
+  width: 100%;          /* ขยายเต็ม container */
+  max-width: 1120px;    /* แต่ไม่เกิน 1120px */
+  height: 375px;
+  background: white;
+  padding: 15px;
+  border-radius: 8px;
+  margin: 0 auto;       /* จัดกลาง container */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+.concertTitle {
+  margin: 0 0 10px;
+  color: #3498db;
+}
+.concertFooter {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.delete {
+  background: #e74c3c;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.delete:hover {
+  background: #c0392b;
+}
+
+.cancel {
+
+  background: #F96464;
+   width: 160px;
+  height: 60px;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+
+}
+
+.reserve {
+    background: #1692EC;
+    width: 160px;
+  height: 60px;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.reserve:hover {
+  background: #1138b9;
+}
+
+
+
+/* Create form */
+.createForm {
+  display: flex;
+  padding: 10px;
+  flex-direction: column;
+  gap: 10px;
+}
+.createForm input,
+.createForm textarea {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+.createBtn {
+  background: #2ecc71;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.createBtn:hover {
+  background: #27ae60;
+}
+.formCard {
+    padding: 2rem;
+  border-radius: 8px;
+  height: 545px;
+  background-color: #fff;
+  border: 1px solid #e0e0e0; 
+}
+
+.formTitle {
+    line-clamp: 1;     /* ไม่ให้ขึ้นบรรทัดใหม่ */
+  overflow: hidden;          /* ซ่อนส่วนเกิน */
+  text-overflow: ellipsis;   /* ใส่ ... */
+  max-width: 100%;  
+  font-size: 40px;
+  font-weight: 700;
+  color: #1692EC;
+  margin-bottom: 1rem;
+}
+.formCard hr {
+  border: none;
+  height: 1px;
+  background-color: #C2C2C2;
+  margin-bottom: 2rem;
+}
+.formCard label {
+  font-size: 24px;
+  line-height: 36px;
+}
+.formGrid {
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  display: flex;
+
+  flex-wrap: wrap;
+}
+
+.formGroup {
+  flex: 1;          /* แต่ละกล่องกินครึ่งบรรทัด */
+  min-width: 0;     /* ป้องกัน input ขยายเกิน container */
+  box-sizing: border-box;
+  margin-bottom: 1.5rem;
+  
+}
+
+.formGroup label {
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.formGroup input{
+  margin-top: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.25rem;
+  width: 100%;
+  font-size: 1rem;
+}
+.formGroup textarea {
+    margin-top: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.25rem;
+  font-size: 1rem;
+  height: 102px;        /* ความสูงเริ่มต้น */
+  resize: vertical;     /* ให้ปรับขนาดแนวตั้งได้ */
+  min-height: 6rem;     /* ความสูงต่ำสุด */
+  width: 100%;
+  box-sizing: border-box; /* กัน overflow */
+}
+
+
+.formActions {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: flex-end; /* ชิดขวา */
+  width: 100%; /* ให้กินเต็มบรรทัด */
+}
+
+.formActions button {
+  background-color: #1692EC;
+  color: white;
+  padding: 0.5rem 1rem;
+  font-weight: 500;
+  font-size: 24px;
+  border-radius: 0.25rem;
+  display: flex;            
+  justify-content: center;
+  align-items: center;  
+  gap: 0.5rem;
+  cursor: pointer;
+  width: 160px;
+  text-align: center;
+  height: 60px;
+}
+
+.formActions button:hover {
+  background-color: #1e40af;
+}
+
+.form-group input,
+.form-group textarea {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 6rem;
+}
+
+/* Button */
+.form-actions {
+  text-align: right;
+  margin-top: 1.5rem;
+}
+
+.form-actions button {
+  background-color: #2563eb;
+  color: white;
+  padding: 0.5rem 1rem;
+  font-weight: 500;
+  border-radius: 0.5rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+
+.form-actions button:hover {
+  background-color: #1e40af;
+}
+.sidebar-container {
+  width: 240px;
+  height: 108px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-sizing: border-box;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+/* กล่อง input + icon */
+.inputWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.inputWrapper input {
+  width: 100%;
+  padding-right: 40px; /* กัน icon ทับ text */
+  box-sizing: border-box;
+}
+
+/* icon อยู่ขวาสุดในช่อง input */
+.inputIcon {
+  position: absolute;
+  right: 10px;
+  pointer-events: none; /* กันกดทับ input */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+/* ทำ responsive */
+
+.inputIcon {
+  position: absolute;
+  top: 50%;
+  right: 0.75rem;
+  transform: translateY(-50%); /* จัดให้อยู่กึ่งกลาง */
+  pointer-events: none; /* กดทะลุไปที่ input ได้ */
+  display: flex;
+  align-items: center;
+}
+
+
+.toast {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+  border-radius: 8px;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  animation: slideIn 0.3s ease;
+}
+
+.toastIcon {
+  font-size: 20px;
+}
+
+.toastClose {
+  margin-left: auto;
+  cursor: pointer;
+}
+.historyPage {
+  padding: 20px;
+}
+
+.historyTable {
+  width: 100%; /* จำกัดความกว้างสูงสุด */
+  margin: 0 auto;     /* จัดตรงกลาง */
+  border-collapse: collapse;
+  background: white;
+}
+
+
+.historyTable th,
+.historyTable td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.historyTable th {
+  background-color: white;
+}
+.historyTable th:nth-child(1),
+.historyTable td:nth-child(1) {
+  height: 44px;
+  width: 25%;
+}
+
+.historyTable th:nth-child(2),
+.historyTable td:nth-child(2) {
+  height: 44px;
+  width: 25%;
+}
+
+.historyTable th:nth-child(3),
+.historyTable td:nth-child(3) {
+  height: 44px;
+  width: 25%;
+}
+
+.historyTable th:nth-child(4),
+.historyTable td:nth-child(4) {
+  height: 44px;
+  width: 25%;
+}
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(50px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+/* =========================
+   Responsive Design
+   ========================= */
+/* Desktop */
+.container {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* Tablet */
+@media (max-width: 1024px) {
+  .sidebar {
+    width: 180px;
+  }
+  .header {
+    font-size: 20px;
+  }
+   .main {
+    margin-left: 180px; /* ลดตาม sidebar */
+    padding: 1.5rem;
+  }
+}
+/* Container ของ Tabs */
+.tabHeader {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+/* ปุ่ม Tab ปกติ */
+.tabHeader button {
+  background: none;
+  border: none;
+  padding: 0.5rem 1rem;
+  font-size: 24px;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+/* Tab active */
+.tabHeader button.activeTab {
+  border-bottom-color: #1692EC;
+  color: #1692EC;
+  font-weight: 600;
+}
+
+/* Hover effect */
+.tabHeader button:not(.activeTab):hover {
+  color: #1692EC;
+}
+.tabHeader button:not(.activeTab):hover {
+  color: #1692EC;
+}
+/* Mobile */
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+  }
+  .main {
+    margin-left: 0;     /* เอา margin-left ออกเพราะ sidebar เต็มจอ */
+    padding: 1rem;
+  }
+  .sidebar {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;   /* แก้ไม่ให้ทับ content */
+    height: auto;         /* ให้สูงตาม content */
+    padding: 10px 15px;
+    box-sizing: border-box;
+  }
+  .dashboardCard {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  padding: 2%;
+  border-radius: 8px;
+  flex: 1 1 250px;       /* ขยายได้, shrink ได้, base 250px */
+  max-width: 100%;         /* card ไม่เกิน 30% ของ container */      /* card เล็กสุดไม่ต่ำกว่า 200px */
+  aspect-ratio: 1 / 1;    /* ความสูงปรับตามความกว้างอัตโนมัติ */
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  gap: 0.5rem;
+  text-align: center;
+  font-size: clamp(16px, 2vw, 24px); /* ตัวอักษรปรับตามหน้าจอ */
+}
+
+  .nav {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;      /* ถ้าเมนูยาวเกินจอ ให้ขึ้นบรรทัดใหม่ */
+    gap: 10px;
+  }
+
+  .logout {
+    margin-top: 0;
+  }
+
+  .main {
+    flex: 1;
+    padding: 15px;
+  }
+
+  .cards {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .concertFooter {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
+
+  .formGrid {
+    flex-direction: column;
+  }
+  .formGroup {
+    width: 100%;
+  }
+}
+
+.concertList {
+  padding: 1rem;
+}
+
+.concertCard {
+  border: 1px solid #C2C2C2;
+  padding: 2rem;
+  margin-bottom: 1rem;
+  border-radius: 8px;
+  
+}
+.concertCard h3{
+  font-size: 32;
+  color: #1692EC;
+
+}
+.concertCard hr{
+  border: none;
+  height: 1px;
+  background-color: #C2C2C2;
+
+}
+.concertDescription {
+  display: -webkit-box;        /* For WebKit-based browsers */
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;       /* Limit to 5 lines (WebKit) */
+  display: box;
+  box-orient: vertical;
+
+  line-clamp: 5;               /* Standard property for compatibility */
+  
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.concertCardSeat{
+  display: flex;
+  align-items: center;
+  gap: 8px; 
+  font-size: 24px;
+}
+.concertName {
+  color: #1d4ed8;
+  font-weight: bold;
+   white-space: nowrap;      /* บังคับให้เป็นบรรทัดเดียว */
+  overflow: hidden;         /* ซ่อนข้อความที่ล้น */
+  text-overflow: ellipsis;
+}
+.concertCardGrid{
+  display: flex;
+  justify-content: space-between; /* ช่วยให้ซ้ายขวาห่างกัน */
+  align-items: center; /* จัดให้อยู่กึ่งกลางแนวตั้ง */
+  margin-top: 8px;
+}
+.deleteBtnWrapper {
+  display: flex;
+  justify-content: flex-end; /* ปุ่มชิดขวา */
+  margin-top: 8px;
+}
+.deleteBtn {
+  background-color: #E84E4E;
+  color: #fff;
+  width: 160px;
+  height: 60px;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+/* Modal Styles */
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5); /* ปรับความทึบ */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+}
+
+.modalContent {
+  background-color: #fff;
+  padding: 1.5rem;
+  border-radius: 12px;
+  width: 320px;
+  text-align: center;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.modalIcon {
+  color: #ef4444;
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.modalText {
+  margin-bottom: 1rem;
+}
+
+.modalButtons {
+  display: flex;
+  justify-content: space-between;
+}
+
+.modalCancel {
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  background: #fff;
+  cursor: pointer;
+}
+
+.modalConfirm {
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  border: none;
+  background-color: #ef4444;
+  color: #fff;
+  cursor: pointer;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.pagination button {
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  background-color: white;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.pagination button:hover:not(:disabled) {
+  background-color: #5f3e3e;
+}
+
+.pagination button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.pagination span {
+  font-weight: 500;
+}
