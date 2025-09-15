@@ -9,7 +9,6 @@ export default function AuthPage() {
   const { role, setAuth, logout } = useAuth();
   const router = useRouter();
 
-  // States
   const [showSignUp, setShowSignUp] = useState(false);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -18,13 +17,11 @@ export default function AuthPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  // Redirect user if already logged in
   useEffect(() => {
     if (role === "user") router.push("/user");
     if (role === "admin") router.push("/admin");
   }, [role, router]);
 
-  // Handle Sign In
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -44,7 +41,6 @@ export default function AuthPage() {
       if (data.role) {
         setAuth(data.access_token, data.role, data._id);
       } else {
-        // ถ้า backend ไม่ส่ง role → call /me
         const meRes = await fetch("http://localhost:3000/api/v1/user/auth/me", {
           headers: { Authorization: `Bearer ${data.access_token}` },
         });
@@ -58,13 +54,11 @@ export default function AuthPage() {
     }
   };
 
-  // Handle Sign Up
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError("");
 
-    // Validation: password match
     if (password !== confirmPassword) {
       setError("Passwords do not match");
       setLoading(false);
@@ -82,7 +76,6 @@ export default function AuthPage() {
 
       if (!res.ok) throw new Error(data.message || "Sign Up failed");
 
-      // สมัครแล้ว login เลย
       setAuth(data.access_token, data.role ?? "user", data._id);
     } catch (err: any) {
       setError(err.message);

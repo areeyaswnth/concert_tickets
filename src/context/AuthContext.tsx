@@ -1,10 +1,10 @@
-// src/context/AuthContext.tsx
 "use client";
 
+import { API_BASE_URL } from "@/config/api";
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 
 interface User {
-  _id: string; // ใช้กับ /reserve/{userId}
+  _id: string;
   name: string;
   email: string;
   role: "user" | "admin";
@@ -27,7 +27,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // โหลดจาก localStorage
   useEffect(() => {
     const savedToken = localStorage.getItem("token");
     const savedRole = localStorage.getItem("role") as "user" | "admin" | null;
@@ -36,14 +35,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setToken(savedToken);
       setRole(savedRole ?? "guest");
 
-      // fetch /me เพื่อดึง user
-      fetch("http://localhost:3000/api/v1/user/auth/me", {
+      fetch(`${API_BASE_URL}/user/auth/me`, {
         headers: { Authorization: `Bearer ${savedToken}` },
       })
         .then(async (res) => {
           if (!res.ok) throw new Error("Failed to fetch user info");
           const apiUser = await res.json();
-          // map id → _id
+
           const userForContext: User = {
             _id: apiUser.id,
             name: apiUser.name || "",
@@ -54,7 +52,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         })
         .catch((err) => {
           console.error("Failed to parse user from /me:", err);
-          logout(); // ถ้า fetch ล้มเหลว ล้าง localStorage
+          logout(); 
         })
         .finally(() => setLoading(false));
     } else {

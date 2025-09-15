@@ -1,4 +1,4 @@
-/* Fade in effect สำหรับ page transition */
+
 .fade-enter {
   opacity: 0;
   transform: translateY(10px);
@@ -21,10 +21,9 @@
   transition: opacity 0.5s ease, transform 0.5s ease;
 }
 
-/* ปรับสไตล์เรียบหรู */
 body {
   background-color: #f8f9fa;
-  color: #1f2937; /* dark gray */
+  color: #1f2937;
   font-family: "Roboto", sans-serif;
 }
 

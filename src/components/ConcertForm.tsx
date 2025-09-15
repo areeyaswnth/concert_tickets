@@ -3,6 +3,7 @@
 import { useState } from "react";
 import styles from "../app/admin/admin.module.css";
 import Image from "next/image";
+import { createConcert } from "@/api/concerts";
 
 interface ConcertFormProps {
   onCreated?: (message: string) => void;
@@ -17,44 +18,36 @@ export default function ConcertForm({ onCreated }: ConcertFormProps) {
   const [toastType, setToastType] = useState<"success" | "error">("success");
 
   const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
-  setLoading(true);
+    e.preventDefault();
+    setLoading(true);
 
-  try {
-    const res = await fetch("http://localhost:3000/api/v1/concerts/create", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-      body: JSON.stringify({ name: concertName, description, maxSeats: totalSeat }),
-    });
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) throw new Error("Unauthorized");
 
-    const data = await res.json();
+      await createConcert(
+        { name: concertName, description, maxSeats: totalSeat },
+        token
+      );
 
-    if (!res.ok) {
-      setToastType("error");
-      setToast(data?.message || "Failed to create concert");
-    } else {
       setToastType("success");
       setToast("Concert created successfully!");
       setConcertName("");
       setTotalSeat(500);
       setDescription("");
-      // เรียก callback ส่งข้อความ toast
+
       if (onCreated) onCreated("Concert created successfully!");
+    } catch (err: unknown) {
+      setToastType("error");
+      setToast(err instanceof Error ? err.message : "Something went wrong");
+    } finally {
+      setLoading(false);
+      setTimeout(() => {
+        setToast("");
+        setToastType("success");
+      }, 5000);
     }
-  } catch (err: unknown) {
-    setToastType("error");
-    setToast(err instanceof Error ? err.message : "Something went wrong");
-  } finally {
-    setLoading(false);
-    setTimeout(() => {
-      setToast("");
-      setToastType("success");
-    }, 5000);
-  }
-};
+  };
 
   return (
     <>

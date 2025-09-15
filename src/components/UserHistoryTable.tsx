@@ -1,24 +1,32 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Dispatch, SetStateAction } from "react";
 import styles from "../app/admin/admin.module.css";
-import { useAuth } from "@/context/AuthContext";
-import { fetchAdminTransactions, Transaction, Meta } from "@/api/transactions";
+import { fetchUserTransactions, Transaction, Meta } from "@/api/transactions";
 
-export default function AdminHistory() {
-  const { token } = useAuth();
+interface UserHistoryProps {
+  token: string;
+  userId?: string;
+  setToast: Dispatch<SetStateAction<string | null>>;
+}
+
+export default function UserHistory({ token, userId, setToast }: UserHistoryProps) {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [limit] = useState(5);
   const [meta, setMeta] = useState<Meta | null>(null);
-  const [toast, setToast] = useState<string | null>(null);
 
   const getTransactions = async (page: number) => {
-    if (!token) return;
+    if (!userId) {
+      setToast("User not found");
+      setTimeout(() => setToast(null), 5000);
+      return;
+    }
+
     setLoading(true);
     try {
-      const res = await fetchAdminTransactions(token, page, limit);
+      const res = await fetchUserTransactions(token, userId, page, limit);
       setTransactions(res.data);
       setMeta(res.meta);
     } catch (err: any) {
@@ -33,22 +41,18 @@ export default function AdminHistory() {
   };
 
   useEffect(() => {
-    getTransactions(page);
-  }, [token, page]);
+    if (token && userId) getTransactions(page);
+  }, [token, page, userId]);
 
   if (loading) return <p>Loading...</p>;
   if (!transactions.length) return <p>No transactions found</p>;
 
   return (
     <div className={styles.historyPage}>
-      {/* Toast */}
-      {toast && <div className={styles.toast}>{toast}</div>}
-
       <table className={styles.historyTable}>
         <thead>
           <tr>
             <th>Date time</th>
-            <th>Username</th>
             <th>Concert name</th>
             <th>Action</th>
           </tr>
@@ -57,7 +61,6 @@ export default function AdminHistory() {
           {transactions.map((t) => (
             <tr key={t._id}>
               <td>{new Date(t.createdAt).toLocaleString()}</td>
-              <td>{t.username}</td>
               <td>{t.concertName}</td>
               <td>{t.action === "CANCELLED" ? "Cancel" : "Reserve"}</td>
             </tr>
@@ -65,13 +68,9 @@ export default function AdminHistory() {
         </tbody>
       </table>
 
-      {/* Pagination */}
       {meta && meta.pages > 1 && (
         <div className={styles.pagination}>
-          <button disabled={page <= 1} onClick={() => setPage((prev) => prev - 1)}>
-            Previous
-          </button>
-
+          <button disabled={page <= 1} onClick={() => setPage((prev) => prev - 1)}>Previous</button>
           {Array.from({ length: meta.pages }, (_, i) => (
             <button
               key={i + 1}
@@ -81,10 +80,7 @@ export default function AdminHistory() {
               {i + 1}
             </button>
           ))}
-
-          <button disabled={page >= meta.pages} onClick={() => setPage((prev) => prev + 1)}>
-            Next
-          </button>
+          <button disabled={page >= meta.pages} onClick={() => setPage((prev) => prev + 1)}>Next</button>
         </div>
       )}
     </div>

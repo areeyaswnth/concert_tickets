@@ -5,6 +5,7 @@ import { useAuth } from "@/context/AuthContext";
 import { Concert } from "@/types/concert";
 import styles from "../app/admin/admin.module.css";
 import Image from "next/image";
+import { cancelConcert } from "@/api/concerts";
 
 interface AdminConcertListProps {
   concerts: Concert[];
@@ -27,40 +28,24 @@ export default function AdminConcertList({ concerts: initialConcerts, onActionCo
     setShowModal(true);
   };
 
-  const confirmDelete = async () => {
-    if (!selectedConcert || !token) return;
-    setLoading(true);
+const confirmDelete = async () => {
+  if (!selectedConcert || !token) return;
+  setLoading(true);
 
-    try {
-      const res = await fetch(
-        `http://localhost:3000/api/v1/concerts/${selectedConcert._id}/cancel`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({ status: "cancelled" }),
-        }
-      );
-
-      if (!res.ok) {
-        const errData = await res.json();
-        throw new Error(errData?.message || "Failed to cancel concert");
-      }
-
-      setShowModal(false);
-      onActionComplete?.("Concert cancelled successfully!", "success");
-    } catch (err) {
-      console.error(err);
-      onActionComplete?.(
-        err instanceof Error ? err.message : "Something went wrong",
-        "error"
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
+  try {
+    await cancelConcert(token, selectedConcert._id);
+    setShowModal(false);
+    onActionComplete?.("Concert cancelled successfully!", "success");
+  } catch (err) {
+    console.error(err);
+    onActionComplete?.(
+      err instanceof Error ? err.message : "Something went wrong",
+      "error"
+    );
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div className={styles.concertList}>

@@ -5,12 +5,7 @@ import styles from "../app/admin/admin.module.css";
 import Image from "next/image";
 import { Concert } from "@/types/concert";
 import { useAuth } from "@/context/AuthContext";
-
-export enum ReservationStatus {
-  CONFIRMED = "CONFIRMED",
-  CANCELLED = "CANCELLED",
-}
-
+import { reserveConcert,cancelReservation, ReservationStatus } from "@/api/reserve";
 interface UserConcertListProps {
   concerts: Concert[];
 }
@@ -23,7 +18,7 @@ export default function UserConcertList({ concerts: initialConcerts }: UserConce
   const [toastType, setToastType] = useState<"success" | "error">("success");
 
   useEffect(() => {
-    setConcerts(initialConcerts); // sync prop updates
+    setConcerts(initialConcerts); 
   }, [initialConcerts]);
 
   const showToast = (msg: string, type: "success" | "error" = "success") => {
@@ -32,22 +27,11 @@ export default function UserConcertList({ concerts: initialConcerts }: UserConce
     setTimeout(() => setToast(""), 5000);
   };
 
-  const handleReserve = async (concertId: string) => {
+  const handleReserveClick = async (concertId: string) => {
     if (!token || !user?._id) return showToast("Unauthorized", "error");
     setLoadingId(concertId);
     try {
-      const res = await fetch(`http://localhost:3000/api/v1/reserve/${user._id}/${concertId}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      if (!res.ok) {
-        const errData = await res.json();
-        throw new Error(errData.message || "Failed to reserve");
-      }
-      const data = await res.json();
+      const data = await reserveConcert(token, user._id, concertId);
       setConcerts(prev =>
         prev.map(c =>
           c._id === concertId
@@ -63,21 +47,11 @@ export default function UserConcertList({ concerts: initialConcerts }: UserConce
     }
   };
 
-  const handleCancel = async (concertId: string) => {
+  const handleCancelClick = async (concertId: string) => {
     if (!token || !user?._id) return showToast("Unauthorized", "error");
     setLoadingId(concertId);
     try {
-      const res = await fetch(`http://localhost:3000/api/v1/reserve/${user._id}/${concertId}`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      if (!res.ok) {
-        const errData = await res.json();
-        throw new Error(errData.message || "Failed to cancel");
-      }
+      await cancelReservation(token, user._id, concertId);
       setConcerts(prev =>
         prev.map(c =>
           c._id === concertId
@@ -102,7 +76,7 @@ export default function UserConcertList({ concerts: initialConcerts }: UserConce
           concerts.map(c => (
             <div key={c._id} className={styles.concertCard}>
               <h3 className={styles.concertName}>{c.name}</h3>
-              <hr></hr>
+              <hr />
               <p className={styles.concertDescription}>{c.description}</p>
               <div className={styles.concertCardGrid}>
                 <p className={styles.concertCardSeat}>
@@ -112,7 +86,7 @@ export default function UserConcertList({ concerts: initialConcerts }: UserConce
                 <button
                   className={
                     c.reservationStatus === ReservationStatus.CANCELLED
-                      ? styles.cancel + " " + styles.disabled
+                      ? `${styles.cancel} ${styles.disabled}`
                       : c.reservationId
                         ? styles.cancel
                         : styles.reserve
@@ -121,8 +95,8 @@ export default function UserConcertList({ concerts: initialConcerts }: UserConce
                     c.reservationStatus === ReservationStatus.CANCELLED
                       ? undefined
                       : c.reservationId
-                        ? handleCancel(c._id)
-                        : handleReserve(c._id)
+                        ? handleCancelClick(c._id)
+                        : handleReserveClick(c._id)
                   }
                   disabled={c.reservationStatus === ReservationStatus.CANCELLED || loadingId === c._id}
                 >
@@ -144,13 +118,16 @@ export default function UserConcertList({ concerts: initialConcerts }: UserConce
 
       {toast && (
         <div className={`${styles.toast} ${toastType === "error" ? styles.toastError : styles.toastSuccess}`}>
-
-          <span className={styles.toastIcon}>{toastType === "error" ? (<Image src="/icons/cancel.svg" alt="error" width={24} height={24} />
-          ) : (
-            <Image src="/icons/check.svg" alt="check" width={24} height={24} />
-          )}</span>
+          <span className={styles.toastIcon}>
+            {toastType === "error" ? (
+              <Image src="/icons/cancel.svg" alt="error" width={24} height={24} />
+            ) : (
+              <Image src="/icons/check.svg" alt="check" width={24} height={24} />
+            )}
+          </span>
           <span>{toast}</span>
-          <span className={styles.toastClose} onClick={() => setToast("")}> <Image src="/icons/CloseFilled.svg" alt="x" width={20} height={20} />
+          <span className={styles.toastClose} onClick={() => setToast("")}>
+            <Image src="/icons/CloseFilled.svg" alt="x" width={20} height={20} />
           </span>
         </div>
       )}

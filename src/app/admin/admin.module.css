@@ -4,13 +4,13 @@
   font-family: sans-serif;
 }
 
-/* Sidebar */
+
 .sidebar {
   position: fixed;
   top: 0;
   left: 0;
-  width: 240px;      /* กำหนดความกว้างของ sidebar */
-  height: 100vh;     /* เต็มสูง */
+  width: 240px;     
+  height: 100vh;   
   background: #FFFFFF;
   border: 1px #E7E7E7;
   color: #000000;
@@ -59,28 +59,28 @@
 }
 .logout {
   display: flex;
-  align-items: center; /* จัดแนวกลางแนวตั้ง */
-  gap: 8px; /* ระยะห่างระหว่างไอคอนกับข้อความ */
+  align-items: center; 
+  gap: 8px; 
   padding: 8px 12px;
   background: none;
   border: none;
   color: #000000;
   cursor: pointer;
   text-align: left;
+  font-size: 24px;
   margin-top: 20px;
 }
 .logout:hover {
   color: rgb(0, 0, 0);
-  background-color: #E7E7E7;;
+  background-color: #EAF5F9;
 }
 
 
-/* Main content */
 .main {
   flex: 1;
   padding: 30px;
   background: #FBFBFB;
-  margin-left: 240px;   /* ให้เว้นด้านซ้าย เท่ากับ sidebar */
+  margin-left: 240px;  
   padding: 2rem;
   overflow-y: auto;
 }
@@ -89,10 +89,9 @@
   margin-bottom: 20px;
 }
 
-/* Cards */
 .cards {
   display: flex;
-  flex-wrap: wrap;      /* ถ้าไม่พอ width ขึ้นบรรทัดใหม่ */
+  flex-wrap: wrap; 
   gap: 1rem;
   justify-content: center;
 }
@@ -103,15 +102,15 @@
   align-items: center;
   justify-content: center;
   border-radius: 8px;
-  flex: 1 1 250px;       /* ขยายได้, shrink ได้, base 250px */
-  max-width: 350px;         /* card ไม่เกิน 30% ของ container */
+  flex: 1 1 250px;     
+  max-width: 350px;     
   min-width: 200px;  
-  max-height: 234px;     /* card เล็กสุดไม่ต่ำกว่า 200px */
-  aspect-ratio: 1 / 1;    /* ความสูงปรับตามความกว้างอัตโนมัติ */
+  max-height: 234px;    
+  aspect-ratio: 1 / 1; 
   box-shadow: 0 2px 6px rgba(0,0,0,0.1);
   gap: 0.5rem;
   text-align: center;
-  font-size: clamp(16px, 2vw, 24px); /* ตัวอักษรปรับตามหน้าจอ */
+  font-size: clamp(16px, 2vw, 24px);
 }
 
 .dashboardCard h2 {
@@ -122,15 +121,15 @@
 
 
 .dashboardCardBlue {
-  background-color: #0070A4; /* ตัวอย่างสีฟ้า */
+  background-color: #0070A4;
   color: white;
 }
 .dashboardCardGreen {
-  background-color: #00A58B; /* ตัวอย่างสีเขียว */
+  background-color: #00A58B;
   color: white;
 }
 .dashboardCardRed {
-  background-color: #E84E4E; /* ตัวอย่างสีแดง */
+  background-color: #E84E4E; 
   color: white;
 }
 
@@ -151,7 +150,6 @@
   font-size: 28px;
 }
 
-/* Tabs */
 .tabs {
   display: flex;
   gap: 10px;
@@ -173,7 +171,6 @@
   color: white;
 }
 
-/* Concert cards */
 .concerts {
 
   display: flex;
@@ -181,13 +178,13 @@
   gap: 15px;
 }
 .concertCard {
-  width: 100%;          /* ขยายเต็ม container */
-  max-width: 1120px;    /* แต่ไม่เกิน 1120px */
+  width: 100%;         
+  max-width: 1120px;  
   height: 375px;
   background: white;
   padding: 15px;
   border-radius: 8px;
-  margin: 0 auto;       /* จัดกลาง container */
+  margin: 0 auto;     
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -207,10 +204,10 @@
   margin-top: 10px;
   flex-wrap: wrap;
   gap: 10px;
-}/* Desktop (default) */
+}
 .deleteBtnWrapper {
   display: flex;
-  justify-content: flex-end; /* ปุ่มชิดขวา */
+  justify-content: flex-end;  
   margin-top: 8px;
   gap: 6px;
 }
@@ -218,8 +215,8 @@
 .delete {
   display: inline-flex;
   flex-direction: row;
-  align-items: center;      /* จัด icon+text อยู่ตรงกลางแนวตั้ง */
-  justify-content: center;  /* จัดให้ icon+text อยู่ตรงกลางแนวนอน */
+  align-items: center;   
+  justify-content: center;  
   background: #e74c3c;
   width: 160px;
   height: 60px;
@@ -271,15 +268,14 @@
   cursor: not-allowed !important;
 }
 
-/* Responsive for smaller screens */
 @media (max-width: 768px) {
   .cancel,
   .reserve,
   .delete {
-    width: 40%;       /* เต็มความกว้างของ container */
-    height: auto;      /* ปรับความสูงอัตโนมัติ */
-    font-size: 16px;   /* ลดขนาด font */
-    padding: 0.5rem;   /* ปรับ padding ให้เหมาะสม */
+    width: 40%;      
+    height: auto;      
+    font-size: 16px; 
+    padding: 0.5rem;   
   }
   .delete{
     width: 100%;
@@ -297,9 +293,9 @@
 }
 
 .formTitle {
-    line-clamp: 1;     /* ไม่ให้ขึ้นบรรทัดใหม่ */
-  overflow: hidden;          /* ซ่อนส่วนเกิน */
-  text-overflow: ellipsis;   /* ใส่ ... */
+    line-clamp: 1;   
+  overflow: hidden;        
+  text-overflow: ellipsis; 
   max-width: 100%;  
   font-size: 40px;
   font-weight: 700;
@@ -325,8 +321,8 @@
 }
 
 .formGroup {
-  flex: 1;          /* แต่ละกล่องกินครึ่งบรรทัด */
-  min-width: 0;     /* ป้องกัน input ขยายเกิน container */
+  flex: 1;         
+  min-width: 0;     
   box-sizing: border-box;
   margin-bottom: 1.5rem;
   
@@ -351,19 +347,19 @@
   border: 1px solid #d1d5db;
   border-radius: 0.25rem;
   font-size: 1rem;
-  height: 102px;        /* ความสูงเริ่มต้น */
-  resize: vertical;     /* ให้ปรับขนาดแนวตั้งได้ */
-  min-height: 6rem;     /* ความสูงต่ำสุด */
+  height: 102px;       
+  resize: vertical;    
+  min-height: 6rem;    
   width: 100%;
-  box-sizing: border-box; /* กัน overflow */
+  box-sizing: border-box; 
 }
 
 
 .formActions {
   margin-top: 2rem;
   display: flex;
-  justify-content: flex-end; /* ชิดขวา */
-  width: 100%; /* ให้กินเต็มบรรทัด */
+  justify-content: flex-end; 
+  width: 100%; 
 }
 
 .formActions button {
@@ -433,7 +429,6 @@
   justify-content: flex-start;
   align-items: flex-start;
 }
-/* กล่อง input + icon */
 .inputWrapper {
   position: relative;
   display: flex;
@@ -442,43 +437,60 @@
 
 .inputWrapper input {
   width: 100%;
-  padding-right: 40px; /* กัน icon ทับ text */
+  padding-right: 40px; 
   box-sizing: border-box;
 }
 
-/* icon อยู่ขวาสุดในช่อง input */
+
 .inputIcon {
   position: absolute;
   right: 10px;
-  pointer-events: none; /* กันกดทับ input */
+  pointer-events: none; 
   display: flex;
   align-items: center;
   justify-content: center;
   height: 100%;
 }
 
-/* ทำ responsive */
+
 
 .inputIcon {
   position: absolute;
   top: 50%;
   right: 0.75rem;
-  transform: translateY(-50%); /* จัดให้อยู่กึ่งกลาง */
-  pointer-events: none; /* กดทะลุไปที่ input ได้ */
+  transform: translateY(-50%); 
+  pointer-events: none; 
   display: flex;
   align-items: center;
 }
 
 @media (max-width: 768px) {
+    .sidebar {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .logo {
+    margin-bottom: 0px
+}
   .createBtn{
-  width: 100%;       /* เต็มความกว้างของ container */
-    height: auto;      /* ปรับความสูงอัตโนมัติ */
-    font-size: 16px;   /* ลดขนาด font */
+  width: 100%;     
+    height: auto;    
+    font-size: 16px;  
     padding: 0.5rem;
   }
   .formCard {
   height: 150%;
 }
+  .sidebarText span{
+    display: none;
+  }
+  .nav{
+    flex-direction: row;
+    padding: 10%;
+    justify-content: space-between;
+  }
+  
 }
 
 
@@ -499,16 +511,15 @@
   animation: slideIn 0.3s ease, fadeOut 0.5s ease 4.5s forwards;
 }
 
-/* Success = สีเขียว */
+
 .toastSuccess {
- background-color: #D0E7D2; /* เขียวเข้ม */
-  color: #000000; /* ตัวอักษรขาว */
+ background-color: #D0E7D2; 
+  color: #000000; 
 }
 
-/* Error = สีแดง */
 .toastError {
   background-color: #ffced3;
-  color: #000000; /* ตัวอักษรขาว */
+  color: #000000;
 }
 
 
@@ -531,8 +542,8 @@
 }
 
 .historyTable {
-  width: 100%; /* จำกัดความกว้างสูงสุด */
-  margin: 0 auto;     /* จัดตรงกลาง */
+  width: 100%; 
+  margin: 0 auto;    
   border-collapse: collapse;
   background: white;
 }
@@ -576,16 +587,13 @@
   to { opacity: 1; transform: translateX(0); }
 }
 
-/* =========================
-   Responsive Design
-   ========================= */
+
 /* Desktop */
 .container {
   display: flex;
   min-height: 100vh;
 }
 
-/* Tablet */
 @media (max-width: 1024px) {
   .sidebar {
     width: 180px;
@@ -594,11 +602,10 @@
     font-size: 20px;
   }
    .main {
-    margin-left: 180px; /* ลดตาม sidebar */
+    margin-left: 180px; 
     padding: 1.5rem;
   }
 }
-/* Container ของ Tabs */
 .tabHeader {
   display: flex;
   gap: 1rem;
@@ -637,7 +644,7 @@
     flex-direction: column;
   }
   .main {
-    margin-left: 0;     /* เอา margin-left ออกเพราะ sidebar เต็มจอ */
+    margin-left: 0;    
     padding: 1rem;
   }
   .sidebar {
@@ -646,19 +653,19 @@
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    position: relative;   /* แก้ไม่ให้ทับ content */
-    height: auto;         /* ให้สูงตาม content */
+    position: relative;  
+    height: auto;        
     padding: 10px 15px;
     box-sizing: border-box;
   }
   
     .sidebar-text {
-    justify-content: center; /* จัดไอคอนตรงกลาง */
+    justify-content: center; 
   }
 
-  .sidebar-text span, /* ถ้าใช้ span ครอบข้อความ */
-  .sidebar-text :not(img) { /* หรือทุกอย่างที่ไม่ใช่ img */
-    display: none; /* ซ่อนข้อความ */
+  .sidebar-text span, 
+  .sidebar-text :not(img) { 
+    display: none; 
   }
 
   .logout {
@@ -674,20 +681,21 @@
   align-items: center;
   justify-content: center;
   padding: 2%;
+  max-height: 40%;
   border-radius: 8px;
-  flex: 1 1 250px;       /* ขยายได้, shrink ได้, base 250px */
-  max-width: 100%;         /* card ไม่เกิน 30% ของ container */      /* card เล็กสุดไม่ต่ำกว่า 200px */
-  aspect-ratio: 1 / 1;    /* ความสูงปรับตามความกว้างอัตโนมัติ */
+  flex: 1 1 250px;      
+  max-width: 100%;       
+  aspect-ratio: 1 / 1;    
   box-shadow: 0 2px 6px rgba(0,0,0,0.1);
   gap: 0.5rem;
   text-align: center;
-  font-size: clamp(16px, 2vw, 24px); /* ตัวอักษรปรับตามหน้าจอ */
+  font-size: clamp(16px, 2vw, 24px); 
 }
 
   .nav {
     display: flex;
     flex-direction: row;
-    flex-wrap: wrap;      /* ถ้าเมนูยาวเกินจอ ให้ขึ้นบรรทัดใหม่ */
+    flex-wrap: wrap;     
     gap: 10px;
   }
 
@@ -729,7 +737,6 @@
   padding: 2rem;
   margin-bottom: 1rem;
   border-radius: 8px;
-  
 }
 .concertCard h3{
   font-size: 32;
@@ -738,18 +745,17 @@
 }
 .concertCard hr{
   border: none;
-  height: 1px;
   background-color: #C2C2C2;
 
 }
 .concertDescription {
-  display: -webkit-box;        /* For WebKit-based browsers */
+  display: -webkit-box;      
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 4;       /* Limit to 5 lines (WebKit) */
+  -webkit-line-clamp: 4;      
   display: box;
   box-orient: vertical;
 
-  line-clamp: 5;               /* Standard property for compatibility */
+  line-clamp: 5;              
   
   overflow: hidden;
   text-overflow: ellipsis;
@@ -763,18 +769,17 @@
 .concertName {
   color: #1d4ed8;
   font-weight: bold;
-   white-space: nowrap;      /* บังคับให้เป็นบรรทัดเดียว */
-  overflow: hidden;         /* ซ่อนข้อความที่ล้น */
+   white-space: nowrap;     
+  overflow: hidden;         
   text-overflow: ellipsis;
 }
 .concertCardGrid{
   display: flex;
-  justify-content: space-between; /* ช่วยให้ซ้ายขวาห่างกัน */
-  align-items: center; /* จัดให้อยู่กึ่งกลางแนวตั้ง */
+  justify-content: space-between; 
+  align-items: center; 
   margin-top: 8px;
 }
 
-/* Modal Styles */
 .modalOverlay {
   position: fixed;
   inset: 0;
@@ -791,7 +796,7 @@
   margin-top: 10px;
   border-radius: 8px;
   width: 422px;
-  max-width: 90%; /* ให้เล็กสุดตามขนาดหน้าจอ */
+  max-width: 90%; 
   height: 256px;
   display: flex;
   flex-direction: column;
@@ -809,18 +814,18 @@
   align-items: center;
 }
 .modalTop p{
-    max-width: 400px;        /* กำหนดความกว้าง */
-  white-space: nowrap;     /* ไม่ตัดบรรทัด */
-  overflow: hidden;        /* ซ่อนข้อความเกิน */
-  text-overflow: ellipsis; /* โชว์ ... เมื่อเกิน */
+    max-width: 400px;       
+  white-space: nowrap;    
+  overflow: hidden;      
+  text-overflow: ellipsis; 
   line-height: 1.4;
   text-align: center;
 }
 .modalTop a{
-    max-width: 400px;        /* กำหนดความกว้าง */
-  white-space: nowrap;     /* ไม่ตัดบรรทัด */
-  overflow: hidden;        /* ซ่อนข้อความเกิน */
-  text-overflow: ellipsis; /* โชว์ ... เมื่อเกิน */
+    max-width: 400px;      
+  white-space: nowrap;   
+  overflow: hidden;       
+  text-overflow: ellipsis; 
   line-height: 1.4;
   text-align: center;
 }
@@ -829,10 +834,10 @@
    flex-direction: column;
 }
 .modalGroup a{
-  max-width: 300px;        /* กำหนดความกว้าง */
-  white-space: nowrap;     /* ไม่ตัดบรรทัด */
-  overflow: hidden;        /* ซ่อนข้อความเกิน */
-  text-overflow: ellipsis; /* โชว์ ... เมื่อเกิน */
+  max-width: 300px;       
+  white-space: nowrap;   
+  overflow: hidden;      
+  text-overflow: ellipsis; 
   line-height: 1.4;
 
     font-size: 20px;
@@ -844,22 +849,20 @@
   width: 100%;
   display: flex;
   justify-content: space-between;
-  gap: 10px; /* เว้นระยะระหว่างปุ่ม */
+  gap: 10px; 
 }
 
-/* ไอคอน */
 .modalImage {
   width: 50px;
   height: 50px;
 }
 
-/* ข้อความ */
 .modalText {
   font-size: 20px;
   font-weight: 700;
 }
 
-/* ปุ่ม */
+
 .modalCancel, .modalConfirm {
   height: 48;
   width: 179px;
@@ -879,21 +882,20 @@
   color: #fff;
 }
 
-/* Responsive สำหรับมือถือ */
 @media (max-width: 480px) {
   .modalContent {
-    width: 95%; /* ให้ modal แทบเต็มหน้าจอ */
-    height: auto; /* ปรับความสูงตาม content */
+    width: 95%; 
+    height: auto;
     padding: 1rem;
   }
 
   .modalButtons {
-    flex-direction: column; /* ปุ่มเรียงบน-ล่าง */
+    flex-direction: column;
     gap: 10px;
   }
 
   .modalCancel, .modalConfirm {
-    width: 100%; /* ปุ่มเต็มความกว้าง */
+    width: 100%;
   }
 
   .modalText {
