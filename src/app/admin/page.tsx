@@ -22,21 +22,36 @@ interface DashboardStats {
 }
 
 export default function AdminPage() {
-  const { role, token, user, logout } = useAuth();
+  const { role, token, user, logout, loading: authLoading } = useAuth();
   const router = useRouter();
 
   const [concerts, setConcerts] = useState<Concert[]>([]);
   const [stats, setStats] = useState<DashboardStats>({ totalSeats: 0, reservedCount: 0, cancelledCount: 0 });
   const [loading, setLoading] = useState(true);
   const [tab, setTab] = useState<"overview" | "create" | "history" | "userView">("overview");
-  const [toast, setToast] = useState("");
 
+  const [toast, setToast] = useState("");
+const [toastType, setToastType] = useState<"success" | "error">("success");
+
+const showToast = (msg: string, type: "success" | "error" = "success") => {
+  setToast(msg);
+  setToastType(type);
+  // hide toast หลัง 5 วิ
+  setTimeout(() => setToast(""), 5000);
+};
+
+// callback สำหรับ AdminConcertList
+const handleConcertAction = (message: string, type: "success" | "error") => {
+  showToast(message, type); // แสดง toast
+  refreshData(); // fetch ข้อมูลใหม่โดยไม่กระทบ toast
+};
   // Pagination
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const itemsPerPage = 5;
 
-  // Fetch concerts for admin
+
+  // fetch concerts (admin)
   const fetchConcerts = async (page = 1) => {
     if (!token) return;
     setLoading(true);
@@ -59,12 +74,13 @@ export default function AdminPage() {
       setCurrentPage(page);
     } catch (err) {
       console.error(err);
+      showToast(err instanceof Error ? err.message : "Something went wrong", "error");
     } finally {
       setLoading(false);
     }
   };
 
-  // Fetch concerts for user
+  // fetch concerts (user)
   const fetchUserConcerts = async (page = currentPage) => {
     if (!token || !user?._id) return;
     setLoading(true);
@@ -88,12 +104,13 @@ export default function AdminPage() {
       setCurrentPage(page);
     } catch (err) {
       console.error(err);
+      showToast(err instanceof Error ? err.message : "Something went wrong", "error");
     } finally {
       setLoading(false);
     }
   };
 
-  // Fetch dashboard stats
+  // fetch dashboard stats
   const fetchStats = async () => {
     if (!token || role !== "admin") return;
     try {
@@ -105,10 +122,11 @@ export default function AdminPage() {
       setStats(data);
     } catch (err) {
       console.error(err);
+      showToast(err instanceof Error ? err.message : "Something went wrong", "error");
     }
   };
 
-  // Refresh data function
+  // refresh data helper
   const refreshData = () => {
     if (tab === "userView") fetchUserConcerts(currentPage);
     else {
@@ -117,29 +135,29 @@ export default function AdminPage() {
     }
   };
 
-  // Reload data when tab or page changes
+  // only fetch after auth is ready
   useEffect(() => {
-    if (!token) return;
+    if (authLoading || !token || (tab === "userView" && !user?._id)) return;
     refreshData();
-  }, [tab, token, user?._id, currentPage]);
+  }, [tab, token, user?._id, currentPage, authLoading]);
 
   const handleLogout = () => {
     logout();
     router.push("/");
   };
 
-  // Pagination handlers
   const handleNextPage = () => {
-    if (currentPage < totalPages) setCurrentPage((prev) => prev + 1);
+    if (currentPage < totalPages) setCurrentPage(prev => prev + 1);
   };
   const handlePrevPage = () => {
-    if (currentPage > 1) setCurrentPage((prev) => prev - 1);
+    if (currentPage > 1) setCurrentPage(prev => prev - 1);
   };
   const handlePageClick = (page: number) => {
     if (page !== currentPage) setCurrentPage(page);
   };
 
-  if (loading) return <p>Loading...</p>;
+  // show loading screen if auth is still loading
+  if (authLoading || loading) return <p>Loading...</p>;
   if (role !== "admin") return <Forbidden redirectPath="/" />;
 
   return (
@@ -148,24 +166,27 @@ export default function AdminPage() {
       <aside className={styles.sidebar}>
         <h2 className={styles.logo}>Admin</h2>
         <nav className={styles.nav}>
-          <button className="sidebar-text flex items-center gap-2" onClick={() => setTab("overview")}>
-            <Image src="/icons/home.svg" alt="Home" width={20} height={20} /> Home
+          <button className={styles.sidebarText} onClick={() => setTab("overview")}>
+            <Image src="/icons/home.svg" alt="Home" width={24} height={24} />
+            <span>Home</span>
           </button>
-          <button className="sidebar-text flex items-center gap-2" onClick={() => setTab("history")}>
-            <Image src="/icons/history.svg" alt="History" width={20} height={20} /> History
+          <button className={styles.sidebarText}  onClick={() => setTab("history")}>
+            <Image src="/icons/history.svg" alt="History" width={24} height={24} />
+            <span>History</span>
           </button>
-          <button className="sidebar-text flex items-center gap-2" onClick={() => setTab("userView")}>
-            <Image src="/icons/switch.svg" alt="User" width={20} height={20} /> User View
+          <button className={styles.sidebarText} onClick={() => setTab("userView")}>
+            <Image src="/icons/switch.svg" alt="User" width={24} height={2} />
+            <span>User View</span>
           </button>
         </nav>
         <button className={styles.logout} onClick={handleLogout}>
-          <Image src="/icons/log-out.svg" alt="LogOut" width={20} height={20} /> Logout
+          <Image src="/icons/log-out.svg" alt="LogOut" width={20} height={20} />
+          <span>Logout</span>
         </button>
       </aside>
 
       {/* Main */}
       <main className={styles.main}>
-        {/* Dashboard + Tabs only for overview/create */}
         {(tab === "overview" || tab === "create") && (
           <>
             <div className={styles.cards}>
@@ -193,19 +214,17 @@ export default function AdminPage() {
           </>
         )}
 
-        {/* Tab Content */}
         {tab === "overview" && (
           <>
             {concerts.length > 0 ? (
               <>
-                <AdminConcertList
-                  concerts={concerts}
-                  onActionComplete={() => {
-                    setToast("Action completed");
-                    refreshData();
-                  }}
-                />
-                {totalPages > 1 && (
+               <AdminConcertList
+  concerts={concerts}
+  onActionComplete={(msg, type) => {
+    showToast(msg, type); // แสดง toast
+    refreshData(); // fetch ข้อมูลใหม่โดยไม่กระทบ toast
+  }}
+/>    {totalPages > 1 && (
                   <div className={styles.pagination}>
                     <button onClick={handlePrevPage} disabled={currentPage === 1}>Prev</button>
                     {Array.from({ length: totalPages }, (_, i) => (
@@ -215,47 +234,29 @@ export default function AdminPage() {
                   </div>
                 )}
               </>
-            ) : <p>No concerts available</p>}
+            ) : <p>No concerts found.</p>}
           </>
         )}
 
         {tab === "create" && (
-          <section style={{ marginTop: "24px" }}>
-            <ConcertForm onCreated={() => { setToast("Create successfully"); refreshData(); }} />
-          </section>
+          <ConcertForm onCreated={(message: string) => showToast(message, "success")} />
         )}
 
         {tab === "history" && <AdminHistory />}
-        {tab === "userView" && (
-          <>
-            <UserConcertList
-              concerts={concerts}
-              onActionComplete={() => {
-                setToast("Action completed");
-                refreshData();
-              }}
-            />
-            {totalPages > 1 && (
-              <div className={styles.pagination}>
-                <button onClick={handlePrevPage} disabled={currentPage === 1}>Prev</button>
-                {Array.from({ length: totalPages }, (_, i) => (
-                  <button key={i + 1} className={currentPage === i + 1 ? styles.activePage : ""} onClick={() => handlePageClick(i + 1)}>{i + 1}</button>
-                ))}
-                <button onClick={handleNextPage} disabled={currentPage === totalPages}>Next</button>
-              </div>
-            )}
-          </>
-        )}
 
-        {/* Toast */}
-        {toast && (
-          <div className={styles.toast}>
-            <span>✔️</span>
-            <span>{toast}</span>
-            <span onClick={() => setToast("")}>✖️</span>
-          </div>
+        {tab === "userView" && (
+          <UserConcertList concerts={concerts} />
         )}
       </main>
+
+      {/* Toast */}
+      {toast && (
+        <div className={`${styles.toast} ${toastType === "error" ? styles.toastError : styles.toastSuccess}`}>
+          <span className={styles.toastIcon}>{toastType === "error" ? "❌" : "✔️"}</span>
+          <span>{toast}</span>
+          <span className={styles.toastClose} onClick={() => setToast("")}>✖️</span>
+        </div>
+      )}
     </div>
   );
 }

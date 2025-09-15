@@ -20,10 +20,18 @@
   justify-content: space-between;
 }
 
-.sidebar-text{
+.sidebarText{
   color: #000000;
   font-weight: 400;
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center; 
+  gap: 10px;
+      font-size: 24px;
   
+}
+.nav button:hover{
+  background-color: #EAF5F9
 }
 .logo {
   font-size: 40px;
@@ -199,82 +207,87 @@
   margin-top: 10px;
   flex-wrap: wrap;
   gap: 10px;
+}/* Desktop (default) */
+.deleteBtnWrapper {
+  display: flex;
+  justify-content: flex-end; /* ปุ่มชิดขวา */
+  margin-top: 8px;
+  gap: 6px;
 }
+
 .delete {
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;      /* จัด icon+text อยู่ตรงกลางแนวตั้ง */
+  justify-content: center;  /* จัดให้ icon+text อยู่ตรงกลางแนวนอน */
   background: #e74c3c;
+  width: 160px;
+  height: 60px;
+  font-size: 24px;
+  border-radius: 6px;
+  cursor: pointer;
   color: white;
   border: none;
   padding: 6px 12px;
-  border-radius: 4px;
-  cursor: pointer;
 }
+
 .delete:hover {
-  background: #c0392b;
+  background: #963f37;
 }
 
 .cancel {
-
   background: #F96464;
-   width: 160px;
+  width: 160px;
   height: 60px;
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-  border: none;
   font-size: 24px;
+  border-radius: 6px;
   cursor: pointer;
   color: white;
   border: none;
   padding: 6px 12px;
-  border-radius: 6px;
-  cursor: pointer;
-
+}
+.cancel:hover {
+  background: #963f37;
 }
 
 .reserve {
-    background: #1692EC;
-    width: 160px;
+  background: #1692EC;
+  width: 160px;
   height: 60px;
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-  border: none;
   font-size: 24px;
+  border-radius: 6px;
   cursor: pointer;
   color: white;
   border: none;
   padding: 6px 12px;
-  border-radius: 6px;
-  cursor: pointer;
 }
 .reserve:hover {
   background: #1138b9;
 }
 
+.disabled {
+  background-color: #ccc !important;
+  color: #666 !important;
+  cursor: not-allowed !important;
+}
+
+/* Responsive for smaller screens */
+@media (max-width: 768px) {
+  .cancel,
+  .reserve,
+  .delete {
+    width: 40%;       /* เต็มความกว้างของ container */
+    height: auto;      /* ปรับความสูงอัตโนมัติ */
+    font-size: 16px;   /* ลดขนาด font */
+    padding: 0.5rem;   /* ปรับ padding ให้เหมาะสม */
+  }
+  .delete{
+    width: 100%;
+  }
+
+}
 
 
-/* Create form */
-.createForm {
-  display: flex;
-  padding: 10px;
-  flex-direction: column;
-  gap: 10px;
-}
-.createForm input,
-.createForm textarea {
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-.createBtn {
-  background: #2ecc71;
-  color: white;
-  border: none;
-  padding: 10px;
-  border-radius: 4px;
-  cursor: pointer;
-}
-.createBtn:hover {
-  background: #27ae60;
-}
 .formCard {
     padding: 2rem;
   border-radius: 8px;
@@ -415,6 +428,7 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
+  font-size: 24px;
   box-sizing: border-box;
   justify-content: flex-start;
   align-items: flex-start;
@@ -455,22 +469,54 @@
   align-items: center;
 }
 
+@media (max-width: 768px) {
+  .createBtn{
+  width: 100%;       /* เต็มความกว้างของ container */
+    height: auto;      /* ปรับความสูงอัตโนมัติ */
+    font-size: 16px;   /* ลดขนาด font */
+    padding: 0.5rem;
+  }
+  .formCard {
+  height: 150%;
+}
+}
 
+
+/* CSS */
 .toast {
   position: fixed;
   top: 20px;
   right: 20px;
+  width: 246px;
+  font-size: 14px;
   background-color: #d4edda;
   color: #155724;
-  border: 1px solid #c3e6cb;
   border-radius: 8px;
   padding: 12px 16px;
   display: flex;
   align-items: center;
   gap: 10px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-  animation: slideIn 0.3s ease;
+  animation: slideIn 0.3s ease, fadeOut 0.5s ease 4.5s forwards;
 }
+
+/* Success = สีเขียว */
+.toastSuccess {
+ background-color: #D0E7D2; /* เขียวเข้ม */
+  color: #000000; /* ตัวอักษรขาว */
+}
+
+/* Error = สีแดง */
+.toastError {
+  background-color: #ffced3;
+  color: #000000; /* ตัวอักษรขาว */
+}
+
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(100%); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
 
 .toastIcon {
   font-size: 20px;
@@ -494,7 +540,7 @@
 
 .historyTable th,
 .historyTable td {
-  border: 1px solid #ddd;
+  border: 1px solid #5B5B5B;
   padding: 8px;
   text-align: left;
 }
@@ -605,6 +651,23 @@
     padding: 10px 15px;
     box-sizing: border-box;
   }
+  
+    .sidebar-text {
+    justify-content: center; /* จัดไอคอนตรงกลาง */
+  }
+
+  .sidebar-text span, /* ถ้าใช้ span ครอบข้อความ */
+  .sidebar-text :not(img) { /* หรือทุกอย่างที่ไม่ใช่ img */
+    display: none; /* ซ่อนข้อความ */
+  }
+
+  .logout {
+    justify-content: center;
+  }
+
+  .logout :not(img) {
+    display: none;
+  }
   .dashboardCard {
   display: flex;
   flex-direction: row;
@@ -710,28 +773,12 @@
   align-items: center; /* จัดให้อยู่กึ่งกลางแนวตั้ง */
   margin-top: 8px;
 }
-.deleteBtnWrapper {
-  display: flex;
-  justify-content: flex-end; /* ปุ่มชิดขวา */
-  margin-top: 8px;
-}
-.deleteBtn {
-  background-color: #E84E4E;
-  color: #fff;
-  width: 160px;
-  height: 60px;
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-  border: none;
-  font-size: 24px;
-  cursor: pointer;
-}
 
 /* Modal Styles */
 .modalOverlay {
   position: fixed;
   inset: 0;
-  background-color: rgba(0, 0, 0, 0.5); /* ปรับความทึบ */
+  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -741,43 +788,122 @@
 .modalContent {
   background-color: #fff;
   padding: 1.5rem;
-  border-radius: 12px;
-  width: 320px;
+  margin-top: 10px;
+  border-radius: 8px;
+  width: 422px;
+  max-width: 90%; /* ให้เล็กสุดตามขนาดหน้าจอ */
+  height: 256px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
   text-align: center;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
   transition: transform 0.2s ease, opacity 0.2s ease;
+
 }
 
-.modalIcon {
-  color: #ef4444;
-  font-size: 2rem;
-  margin-bottom: 0.5rem;
+.modalTop { 
+  gap: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.modalTop p{
+    max-width: 400px;        /* กำหนดความกว้าง */
+  white-space: nowrap;     /* ไม่ตัดบรรทัด */
+  overflow: hidden;        /* ซ่อนข้อความเกิน */
+  text-overflow: ellipsis; /* โชว์ ... เมื่อเกิน */
+  line-height: 1.4;
+  text-align: center;
+}
+.modalTop a{
+    max-width: 400px;        /* กำหนดความกว้าง */
+  white-space: nowrap;     /* ไม่ตัดบรรทัด */
+  overflow: hidden;        /* ซ่อนข้อความเกิน */
+  text-overflow: ellipsis; /* โชว์ ... เมื่อเกิน */
+  line-height: 1.4;
+  text-align: center;
 }
 
-.modalText {
-  margin-bottom: 1rem;
+.modalGroup {
+   flex-direction: column;
+}
+.modalGroup a{
+  max-width: 300px;        /* กำหนดความกว้าง */
+  white-space: nowrap;     /* ไม่ตัดบรรทัด */
+  overflow: hidden;        /* ซ่อนข้อความเกิน */
+  text-overflow: ellipsis; /* โชว์ ... เมื่อเกิน */
+  line-height: 1.4;
+
+    font-size: 20px;
+  font-weight: 700;
+  text-align: center;
 }
 
 .modalButtons {
+  width: 100%;
   display: flex;
   justify-content: space-between;
+  gap: 10px; /* เว้นระยะระหว่างปุ่ม */
+}
+
+/* ไอคอน */
+.modalImage {
+  width: 50px;
+  height: 50px;
+}
+
+/* ข้อความ */
+.modalText {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+/* ปุ่ม */
+.modalCancel, .modalConfirm {
+  height: 48;
+  width: 179px;
+  padding: 0.5rem;
+  border-radius: 4px;
+  cursor: pointer;
 }
 
 .modalCancel {
-  padding: 0.5rem 1rem;
-  border-radius: 6px;
   border: 1px solid #ccc;
   background: #fff;
-  cursor: pointer;
 }
 
 .modalConfirm {
-  padding: 0.5rem 1rem;
-  border-radius: 6px;
   border: none;
   background-color: #ef4444;
   color: #fff;
-  cursor: pointer;
+}
+
+/* Responsive สำหรับมือถือ */
+@media (max-width: 480px) {
+  .modalContent {
+    width: 95%; /* ให้ modal แทบเต็มหน้าจอ */
+    height: auto; /* ปรับความสูงตาม content */
+    padding: 1rem;
+  }
+
+  .modalButtons {
+    flex-direction: column; /* ปุ่มเรียงบน-ล่าง */
+    gap: 10px;
+  }
+
+  .modalCancel, .modalConfirm {
+    width: 100%; /* ปุ่มเต็มความกว้าง */
+  }
+
+  .modalText {
+    font-size: 18px;
+  }
+
+  .modalImage {
+    width: 40px;
+    height: 40px;
+  }
 }
 
 .pagination {

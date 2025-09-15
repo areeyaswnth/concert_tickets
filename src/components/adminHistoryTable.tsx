@@ -18,7 +18,7 @@ interface Meta {
   total: number;
   page: number;
   limit: number;
-  totalPages: number;
+  pages: number; // แก้ตรงนี้
 }
 
 export default function AdminHistory() {
@@ -28,34 +28,30 @@ export default function AdminHistory() {
   const [page, setPage] = useState(1);
   const [limit] = useState(5);
   const [meta, setMeta] = useState<Meta | null>(null);
+  const [toast, setToast] = useState<string | null>(null);
 
   const fetchTransactions = async (page: number) => {
     setLoading(true);
     try {
       const res = await fetch(
-        `http://localhost:3000/api/v1/reserve/transactions?admin=true`,
+        `http://localhost:3000/api/v1/transactions/list?admin=true&page=${page}&limit=${limit}`,
         {
+          method: "GET",
           headers: { Authorization: `Bearer ${token}` },
         }
       );
+
       if (!res.ok) throw new Error("Failed to fetch transactions");
-      const json: Transaction[] = await res.json();
 
-      setTransactions(json);
-
-      // สร้าง meta เอง
-      const total = json.length;
-      const totalPages = Math.ceil(total / limit);
-      setMeta({
-        total,
-        page,
-        limit,
-        totalPages,
-      });
-    } catch (err) {
+      const json = await res.json(); // json = { data, meta }
+      setTransactions(json.data);
+      setMeta(json.meta);
+    } catch (err: any) {
       console.error(err);
       setTransactions([]);
       setMeta(null);
+      setToast(err.message || "Something went wrong");
+      setTimeout(() => setToast(null), 5000);
     } finally {
       setLoading(false);
     }
@@ -68,13 +64,11 @@ export default function AdminHistory() {
   if (loading) return <p>Loading...</p>;
   if (!transactions.length) return <p>No transactions found</p>;
 
-  // คำนวณ item ของหน้าปัจจุบัน
-  const start = (page - 1) * limit;
-  const end = start + limit;
-  const currentItems = transactions.slice(start, end);
-
   return (
     <div className={styles.historyPage}>
+      {/* Toast */}
+      {toast && <div className={styles.toast}>{toast}</div>}
+
       <table className={styles.historyTable}>
         <thead>
           <tr>
@@ -85,7 +79,7 @@ export default function AdminHistory() {
           </tr>
         </thead>
         <tbody>
-          {currentItems.map((t) => (
+          {transactions.map((t) => (
             <tr key={t._id}>
               <td>{new Date(t.createdAt).toLocaleString()}</td>
               <td>{t.username}</td>
@@ -96,21 +90,24 @@ export default function AdminHistory() {
         </tbody>
       </table>
 
-      {meta && meta.totalPages > 1 && (
+      {/* Pagination */}
+      {meta && meta.pages > 1 && (
         <div className={styles.pagination}>
-          <button
-            disabled={page <= 1}
-            onClick={() => setPage((prev) => prev - 1)}
-          >
+          <button disabled={page <= 1} onClick={() => setPage((prev) => prev - 1)}>
             Previous
           </button>
-          <span>
-            Page {page} of {meta.totalPages}
-          </span>
-          <button
-            disabled={page >= meta.totalPages}
-            onClick={() => setPage((prev) => prev + 1)}
-          >
+
+          {Array.from({ length: meta.pages }, (_, i) => (
+            <button
+              key={i + 1}
+              className={page === i + 1 ? styles.activePage : ""}
+              onClick={() => setPage(i + 1)}
+            >
+              {i + 1}
+            </button>
+          ))}
+
+          <button disabled={page >= meta.pages} onClick={() => setPage((prev) => prev + 1)}>
             Next
           </button>
         </div>

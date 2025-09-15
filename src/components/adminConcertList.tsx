@@ -8,7 +8,7 @@ import Image from "next/image";
 
 interface AdminConcertListProps {
   concerts: Concert[];
-  onActionComplete?: () => void; // callback สำหรับ refresh data
+  onActionComplete?: (message: string, type: "success" | "error") => void;
 }
 
 export default function AdminConcertList({ concerts: initialConcerts, onActionComplete }: AdminConcertListProps) {
@@ -19,7 +19,7 @@ export default function AdminConcertList({ concerts: initialConcerts, onActionCo
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    setConcertList(initialConcerts); // sync prop updates
+    setConcertList(initialConcerts);
   }, [initialConcerts]);
 
   const handleDeleteClick = (concert: Concert) => {
@@ -44,13 +44,19 @@ export default function AdminConcertList({ concerts: initialConcerts, onActionCo
         }
       );
 
-      if (!res.ok) throw new Error("Failed to cancel concert");
+      if (!res.ok) {
+        const errData = await res.json();
+        throw new Error(errData?.message || "Failed to cancel concert");
+      }
 
       setShowModal(false);
-      onActionComplete?.(); // เรียก callback ให้ fetch ข้อมูลใหม่
+      onActionComplete?.("Concert cancelled successfully!", "success");
     } catch (err) {
       console.error(err);
-      alert("Cannot cancel concert. Please try again.");
+      onActionComplete?.(
+        err instanceof Error ? err.message : "Something went wrong",
+        "error"
+      );
     } finally {
       setLoading(false);
     }
@@ -70,10 +76,12 @@ export default function AdminConcertList({ concerts: initialConcerts, onActionCo
             </p>
             <div className={styles.deleteBtnWrapper}>
               <button
-                className={styles.deleteBtn}
+                className={styles.delete}
                 onClick={() => handleDeleteClick(c)}
+                disabled={loading}
               >
-                Delete
+                <Image src="/icons/trash.svg" alt="Delete" width={24} height={24} />
+                {loading && selectedConcert?._id === c._id ? "Processing..." : "Delete"}
               </button>
             </div>
           </div>
@@ -83,24 +91,18 @@ export default function AdminConcertList({ concerts: initialConcerts, onActionCo
       {showModal && selectedConcert && (
         <div className={styles.modalOverlay}>
           <div className={styles.modalContent}>
-            <div className={styles.modalIcon}>✖</div>
-            <p className={styles.modalText}>
-              Are you sure to cancel? <br />"{selectedConcert.name}"
-            </p>
+            <div className={styles.modalTop}>
+              <Image src="/icons/cancel.svg" alt="cancel" width={48} height={48} />
+              <p className={styles.modalText}>
+                Are you sure you want to delete "{selectedConcert.name}"?
+              </p>
+            </div>
             <div className={styles.modalButtons}>
-              <button
-                className={styles.modalCancel}
-                onClick={() => setShowModal(false)}
-                disabled={loading}
-              >
+              <button className={styles.modalCancel} onClick={() => setShowModal(false)} disabled={loading}>
                 Cancel
               </button>
-              <button
-                className={styles.modalConfirm}
-                onClick={confirmDelete}
-                disabled={loading}
-              >
-                {loading ? "Processing..." : "Yes, Cancel"}
+              <button className={styles.modalConfirm} onClick={confirmDelete} disabled={loading}>
+                {loading ? "Processing..." : "Yes, Delete"}
               </button>
             </div>
           </div>

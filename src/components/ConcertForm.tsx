@@ -3,8 +3,9 @@
 import { useState } from "react";
 import styles from "../app/admin/admin.module.css";
 import Image from "next/image";
+
 interface ConcertFormProps {
-  onCreated?: () => void; 
+  onCreated?: (message: string) => void;
 }
 
 export default function ConcertForm({ onCreated }: ConcertFormProps) {
@@ -13,50 +14,47 @@ export default function ConcertForm({ onCreated }: ConcertFormProps) {
   const [description, setDescription] = useState("");
   const [loading, setLoading] = useState(false);
   const [toast, setToast] = useState("");
+  const [toastType, setToastType] = useState<"success" | "error">("success");
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setToast("");
+  e.preventDefault();
+  setLoading(true);
 
-    try {
-      const res = await fetch("http://localhost:3000/api/v1/concerts/create", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-        body: JSON.stringify({
-          name: concertName,
-          description,
-          maxSeats: totalSeat,
-        }),
-      });
+  try {
+    const res = await fetch("http://localhost:3000/api/v1/concerts/create", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+      body: JSON.stringify({ name: concertName, description, maxSeats: totalSeat }),
+    });
 
-      if (!res.ok) {
-        const errData = await res.json();
-        throw new Error(errData.message || "Failed to create concert");
-      }
+    const data = await res.json();
 
-      setToast("Create successfully");
-
-      // รีเซ็ตฟอร์ม
+    if (!res.ok) {
+      setToastType("error");
+      setToast(data?.message || "Failed to create concert");
+    } else {
+      setToastType("success");
+      setToast("Concert created successfully!");
       setConcertName("");
       setTotalSeat(500);
       setDescription("");
-
-      // เรียก callback หลังสร้างสำเร็จ
-      if (onCreated) onCreated();
-
-      setTimeout(() => setToast(""), 3000);
-    } catch (err: unknown) {
-      if (err instanceof Error) setToast(err.message);
-      else setToast("Something went wrong");
-      setTimeout(() => setToast(""), 3000);
-    } finally {
-      setLoading(false);
+      // เรียก callback ส่งข้อความ toast
+      if (onCreated) onCreated("Concert created successfully!");
     }
-  };
+  } catch (err: unknown) {
+    setToastType("error");
+    setToast(err instanceof Error ? err.message : "Something went wrong");
+  } finally {
+    setLoading(false);
+    setTimeout(() => {
+      setToast("");
+      setToastType("success");
+    }, 5000);
+  }
+};
 
   return (
     <>
@@ -90,7 +88,6 @@ export default function ConcertForm({ onCreated }: ConcertFormProps) {
               </span>
             </div>
           </div>
-
         </div>
 
         <div className={styles.formGroup}>
@@ -111,14 +108,29 @@ export default function ConcertForm({ onCreated }: ConcertFormProps) {
         </div>
       </form>
 
-    {toast && (
-  <div className={`${styles.toast}`} id="toast">
-    <span className={styles.toastIcon}>✔️</span>
-    <span>{toast}</span>
-    <span className={styles.toastClose} onClick={() => setToast("")}>✖️</span>
-  </div>
-)}
-
+      {toast && (
+        <div
+          className={`${styles.toast} ${toastType === "error" ? styles.toastError : styles.toastSuccess}`}
+        >
+          <span className={styles.toastIcon}>
+            {toastType === "error" ? (
+              <Image src="/icons/cancel.svg" alt="error" width={24} height={24} />
+            ) : (
+              <Image src="/icons/check.svg" alt="check" width={24} height={24} />
+            )}
+          </span>
+          <span>{toast}</span>
+          <span
+            className={styles.toastClose}
+            onClick={() => {
+              setToast("");
+              setToastType("success");
+            }}
+          >
+            <Image src="/icons/CloseFilled.svg" alt="x" width={20} height={20} />
+          </span>
+        </div>
+      )}
     </>
   );
 }
