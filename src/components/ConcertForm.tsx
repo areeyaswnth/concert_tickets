@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import styles from "../app/admin/admin.module.css";
+import styles from "@/styles/main.module.css"
 import Image from "next/image";
 import { createConcert } from "@/api/concerts";
 
@@ -31,12 +31,12 @@ export default function ConcertForm({ onCreated }: ConcertFormProps) {
       );
 
       setToastType("success");
-      setToast("Concert created successfully!");
+      setToast("Concert created successfully");
       setConcertName("");
       setTotalSeat(500);
       setDescription("");
 
-      if (onCreated) onCreated("Concert created successfully!");
+      if (onCreated) onCreated("Concert created successfully");
     } catch (err: unknown) {
       setToastType("error");
       setToast(err instanceof Error ? err.message : "Something went wrong");

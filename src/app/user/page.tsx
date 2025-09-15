@@ -3,12 +3,11 @@
 import UserConcertList from "@/components/UserConcertList";
 import UserHistory from "@/components/UserHistoryTable";
 import Forbidden from "@/components/Forbiddenpage";
-import styles from "../admin/admin.module.css";
+import styles from "@/styles/main.module.css"
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { Concert } from "@/types/concert";
-import Image from "next/image";
 import UserSidebar from "@/components/UserSideBar";
 import { API_BASE_URL } from "@/config/api";
 
@@ -92,7 +91,14 @@ export default function UserPage() {
       {toast && <div className={styles.toast}>{toast}</div>}
       <UserSidebar tab={tab} setTab={setTab} handleLogout={handleLogout} />
       <main className={styles.main}>
-        {tab === "overview" && <UserConcertList concerts={concerts} />}
+        {tab === "overview" && (
+          <UserConcertList
+            concerts={concerts}
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={(page) => setCurrentPage(page)}
+          />
+        )}
         {tab === "history" && <UserHistory token={token} userId={user?._id} setToast={setToast} />}
 
         {/* Pagination */}
@@ -107,7 +113,7 @@ export default function UserPage() {
             </button>
           </div>
         )}
-            
+
       </main>
     </div>
   );

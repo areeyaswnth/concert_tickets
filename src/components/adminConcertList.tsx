@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { Concert } from "@/types/concert";
-import styles from "../app/admin/admin.module.css";
+import styles from "@/styles/main.module.css"
 import Image from "next/image";
 import { cancelConcert } from "@/api/concerts";
 
@@ -35,7 +35,7 @@ const confirmDelete = async () => {
   try {
     await cancelConcert(token, selectedConcert._id);
     setShowModal(false);
-    onActionComplete?.("Concert cancelled successfully!", "success");
+    onActionComplete?.("Concert cancelled successfully", "success");
   } catch (err) {
     console.error(err);
     onActionComplete?.(

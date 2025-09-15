@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
+import { API_BASE_URL } from "@/config/api";
 
 export default function AuthPage() {
   const { role, setAuth, logout } = useAuth();
@@ -28,7 +29,7 @@ export default function AuthPage() {
     setError("");
 
     try {
-      const res = await fetch("http://localhost:3000/api/v1/user/auth/login", {
+      const res = await fetch(`${API_BASE_URL}/api/v1/user/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
@@ -41,7 +42,7 @@ export default function AuthPage() {
       if (data.role) {
         setAuth(data.access_token, data.role, data._id);
       } else {
-        const meRes = await fetch("http://localhost:3000/api/v1/user/auth/me", {
+        const meRes = await fetch(`${API_BASE_URL}/api/v1/user/auth/me`, {
           headers: { Authorization: `Bearer ${data.access_token}` },
         });
         const meData = await meRes.json();
@@ -66,7 +67,7 @@ export default function AuthPage() {
     }
 
     try {
-      const res = await fetch("http://localhost:3000/api/v1/user/auth/register", {
+      const res = await fetch(`${API_BASE_URL}/api/v1/user/auth/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, email, password, role: "user" }),

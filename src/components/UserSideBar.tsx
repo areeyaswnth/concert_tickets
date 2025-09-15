@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import styles from "@/app/admin/admin.module.css";
+import styles from "@/styles/main.module.css"
 
 interface UserSidebarProps {
   tab: "overview" | "create" | "history" | "userView";

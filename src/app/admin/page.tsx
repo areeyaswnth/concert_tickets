@@ -14,7 +14,7 @@ import UserConcertList from "@/components/UserConcertList";
 import Forbidden from "@/components/Forbiddenpage";
 
 import { fetchAdminConcerts, fetchUserConcerts, fetchDashboardStats } from "@/api/concerts";
-import styles from "./admin.module.css";
+import styles from "@/styles/main.module.css"
 import AdminSidebar from "@/components/AdminSideBar";
 import Dashboard from "@/components/Dashboard";
 
@@ -142,7 +142,14 @@ export default function AdminPage() {
         )}
         {tab === "create" && <ConcertForm onCreated={(msg) => showToast(msg, "success")} />}
         {tab === "history" && <AdminHistory />}
-        {tab === "userView" && <UserConcertList concerts={concerts} />}
+        {tab === "userView" && (
+          <UserConcertList
+            concerts={concerts}
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={(page) => setCurrentPage(page)}
+          />
+        )}
       </main>
 
       {/* Toast */}

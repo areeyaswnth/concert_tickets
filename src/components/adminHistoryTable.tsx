@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import styles from "../app/admin/admin.module.css";
+import styles from "@/styles/main.module.css"
 import { useAuth } from "@/context/AuthContext";
 import { fetchAdminTransactions, Transaction, Meta } from "@/api/transactions";
 

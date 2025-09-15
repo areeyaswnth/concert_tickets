@@ -1,16 +1,25 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import styles from "../app/admin/admin.module.css";
+import styles from "@/styles/main.module.css";
 import Image from "next/image";
 import { Concert } from "@/types/concert";
 import { useAuth } from "@/context/AuthContext";
-import { reserveConcert,cancelReservation, ReservationStatus } from "@/api/reserve";
+import { reserveConcert, cancelReservation, ReservationStatus } from "@/api/reserve";
+
 interface UserConcertListProps {
   concerts: Concert[];
+  currentPage: number;
+  totalPages: number;
+  onPageChange: (page: number) => void;
 }
 
-export default function UserConcertList({ concerts: initialConcerts }: UserConcertListProps) {
+export default function UserConcertList({
+  concerts: initialConcerts,
+  currentPage,
+  totalPages,
+  onPageChange
+}: UserConcertListProps) {
   const [concerts, setConcerts] = useState<Concert[]>(initialConcerts);
   const { user, token } = useAuth();
   const [loadingId, setLoadingId] = useState<string | null>(null);
@@ -39,7 +48,7 @@ export default function UserConcertList({ concerts: initialConcerts }: UserConce
             : c
         )
       );
-      showToast("Reservation successful!", "success");
+      showToast("Reservation successful", "success");
     } catch (err: any) {
       showToast(err.message || "Something went wrong", "error");
     } finally {
@@ -116,14 +125,27 @@ export default function UserConcertList({ concerts: initialConcerts }: UserConce
         )}
       </div>
 
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <div className={styles.pagination}>
+          <button onClick={() => onPageChange(currentPage - 1)} disabled={currentPage === 1}>Prev</button>
+          {Array.from({ length: totalPages }, (_, i) => (
+            <button
+              key={i + 1}
+              className={currentPage === i + 1 ? styles.activePage : ""}
+              onClick={() => onPageChange(i + 1)}
+            >
+              {i + 1}
+            </button>
+          ))}
+          <button onClick={() => onPageChange(currentPage + 1)} disabled={currentPage === totalPages}>Next</button>
+        </div>
+      )}
+
       {toast && (
         <div className={`${styles.toast} ${toastType === "error" ? styles.toastError : styles.toastSuccess}`}>
           <span className={styles.toastIcon}>
-            {toastType === "error" ? (
-              <Image src="/icons/cancel.svg" alt="error" width={24} height={24} />
-            ) : (
-              <Image src="/icons/check.svg" alt="check" width={24} height={24} />
-            )}
+            <Image src={toastType === "error" ? "/icons/cancel.svg" : "/icons/check.svg"} alt={toastType} width={24} height={24} />
           </span>
           <span>{toast}</span>
           <span className={styles.toastClose} onClick={() => setToast("")}>

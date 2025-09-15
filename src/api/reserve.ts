@@ -21,7 +21,7 @@ export const reserveConcert = async (token: string, userId: string, concertId: s
 };
 
 export const cancelReservation = async (token: string, userId: string, concertId: string) => {
-  const res = await fetch(`${API_BASE_URL}reserve/${userId}/${concertId}`, {
+  const res = await fetch(`${API_BASE_URL}/reserve/${userId}/${concertId}`, {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",

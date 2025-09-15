@@ -15,7 +15,6 @@ export interface CreateConcertPayload {
   description: string;
   maxSeats: number;
 }
-
 export const fetchAdminConcerts = async (token: string, page = 1, limit = 5): Promise<PaginationResponse<Concert>> => {
   const res = await fetch(`${API_BASE_URL}/concerts/list?page=${page}&limit=${limit}`, {
     headers: { Authorization: `Bearer ${token}` },
@@ -32,7 +31,15 @@ export const fetchAdminConcerts = async (token: string, page = 1, limit = 5): Pr
     reservationStatus: c.reservationStatus ?? null,
   }));
 
-  return { data, meta: json.meta };
+  return { 
+    data, 
+    meta: {
+      total: json.meta.total,
+      page: json.meta.page,
+      limit: json.meta.limit,
+      pages: json.meta.totalPages, // แก้ตรงนี้
+    }
+  };
 };
 
 export const fetchUserConcerts = async (token: string, userId: string, page = 1, limit = 5): Promise<PaginationResponse<Concert>> => {
@@ -51,7 +58,15 @@ export const fetchUserConcerts = async (token: string, userId: string, page = 1,
     reservationStatus: c.reservationStatus ?? null,
   }));
 
-  return { data, meta: json.meta };
+  return { 
+    data, 
+    meta: {
+      total: json.meta.total,
+      page: json.meta.page,
+      limit: json.meta.limit,
+      pages: json.meta.totalPages, // แก้ตรงนี้
+    }
+  };
 };
 
 export const fetchDashboardStats = async (token: string) => {

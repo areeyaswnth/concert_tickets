@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, Dispatch, SetStateAction } from "react";
-import styles from "../app/admin/admin.module.css";
+import styles from "@/styles/main.module.css"
 import { fetchUserTransactions, Transaction, Meta } from "@/api/transactions";
 
 interface UserHistoryProps {
