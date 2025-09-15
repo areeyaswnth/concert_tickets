@@ -21,13 +21,13 @@ export default function UserConcertList({
   onPageChange
 }: UserConcertListProps) {
   const [concerts, setConcerts] = useState<Concert[]>(initialConcerts);
-  const { user, token } = useAuth();
+  const { user, token, loading: authLoading } = useAuth();
   const [loadingId, setLoadingId] = useState<string | null>(null);
   const [toast, setToast] = useState("");
   const [toastType, setToastType] = useState<"success" | "error">("success");
 
   useEffect(() => {
-    setConcerts(initialConcerts); 
+    setConcerts(initialConcerts);
   }, [initialConcerts]);
 
   const showToast = (msg: string, type: "success" | "error" = "success") => {
@@ -76,6 +76,8 @@ export default function UserConcertList({
     }
   };
 
+  if (authLoading) return <p>Loading...</p>; // รอ auth ก่อน render
+
   return (
     <>
       <div className={styles.concertList}>
@@ -100,14 +102,21 @@ export default function UserConcertList({
                         ? styles.cancel
                         : styles.reserve
                   }
-                  onClick={() =>
-                    c.reservationStatus === ReservationStatus.CANCELLED
-                      ? undefined
-                      : c.reservationId
-                        ? handleCancelClick(c._id)
-                        : handleReserveClick(c._id)
+                  onClick={() => {
+                    if (!token || !user?._id) return;
+                    if (c.reservationStatus === ReservationStatus.CANCELLED) return;
+                    if (c.reservationId) {
+                      handleCancelClick(c._id);
+                    } else {
+                      handleReserveClick(c._id);
+                    }
+                  }}
+                  disabled={
+                    c.reservationStatus === ReservationStatus.CANCELLED ||
+                    loadingId === c._id ||
+                    !token ||
+                    !user?._id
                   }
-                  disabled={c.reservationStatus === ReservationStatus.CANCELLED || loadingId === c._id}
                 >
                   {c.reservationStatus === ReservationStatus.CANCELLED
                     ? "Cancelled"
@@ -142,6 +151,7 @@ export default function UserConcertList({
         </div>
       )}
 
+      {/* Toast */}
       {toast && (
         <div className={`${styles.toast} ${toastType === "error" ? styles.toastError : styles.toastSuccess}`}>
           <span className={styles.toastIcon}>

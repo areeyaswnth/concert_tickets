@@ -62,7 +62,13 @@ export default function UserHistory({ token, userId, setToast }: UserHistoryProp
             <tr key={t._id}>
               <td>{new Date(t.createdAt).toLocaleString()}</td>
               <td>{t.concertName}</td>
-              <td>{t.action === "CANCELLED" ? "Cancel" : "Reserve"}</td>
+                 <td>
+                {t.action === "CANCELLED"
+                  ? "Cancel"
+                  : t.action === "DELETED_BY_ADMIN"
+                    ? "Deleted by Admin"
+                    : "Reserve"}
+              </td>
             </tr>
           ))}
         </tbody>

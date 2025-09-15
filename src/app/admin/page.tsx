@@ -77,7 +77,11 @@ export default function AdminPage() {
   };
 
   useEffect(() => {
-    if (authLoading || !token || (tab === "userView" && !user?._id)) return;
+    // รอให้ auth โหลดเสร็จ และ token + user._id พร้อมก่อน refresh
+    if (authLoading) return;
+    if (!token) return;
+    if (tab === "userView" && !user?._id) return;
+
     refreshData();
   }, [tab, token, user?._id, currentPage, authLoading]);
 
@@ -108,7 +112,7 @@ export default function AdminPage() {
       <main className={styles.main}>
         {(tab === "overview" || tab === "create") && (
           <>
-            {(tab === "overview" || tab === "create") && <Dashboard stats={stats} />}
+            <Dashboard stats={stats} />
             <div className={styles.tabHeader} style={{ marginTop: "24px" }}>
               <button className={tab === "overview" ? styles.activeTab : ""} onClick={() => setTab("overview")}>Overview</button>
               <button className={tab === "create" ? styles.activeTab : ""} onClick={() => setTab("create")}>Create</button>
@@ -142,12 +146,12 @@ export default function AdminPage() {
         )}
         {tab === "create" && <ConcertForm onCreated={(msg) => showToast(msg, "success")} />}
         {tab === "history" && <AdminHistory />}
-        {tab === "userView" && (
+        {tab === "userView" && token && user?._id && (
           <UserConcertList
             concerts={concerts}
             currentPage={currentPage}
             totalPages={totalPages}
-            onPageChange={(page) => setCurrentPage(page)}
+            onPageChange={handlePageClick}
           />
         )}
       </main>
