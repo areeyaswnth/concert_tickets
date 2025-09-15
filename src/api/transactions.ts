@@ -5,7 +5,7 @@ export interface Transaction {
   reservationId: string;
   username: string;
   concertName: string;
-  action: "CONFIRMED" | "CANCELLED";
+  action: "CONFIRMED" | "CANCELLED" | "DELETED_BY_ADMIN";
   createdAt: string;
   updatedAt: string;
 }
